@@ -15,11 +15,12 @@ const bookmarks = [{
 bookmarkRouter
     .route('/bookmarks')
     .get((req, res) => {
-        return res.status(200).json(bookmarks);
+        res.status(200).json(bookmarks);
     })
     .post(bodyParser, (req, res) => {
         const { title, url, description, rating } = req.body;
         
+        const newRating = parseInt(rating);
 
         if (!title) {
             logger.error(`Title is required.`);
@@ -34,6 +35,11 @@ bookmarkRouter
         if (!rating) {
             logger.error(`Rating is required.`);
             return res.status(400).send('Invalid data');
+        }
+
+        if (newRating < 1 || newRating > 5) {
+            logger.error(`Rating needs to be between 1 and 5.`);
+            return res.status(400).send(`Rating should be a number between 1 and 5.`);
         }
 
         const id = uuid();
