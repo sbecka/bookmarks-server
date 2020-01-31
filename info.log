@@ -1,1 +1,4 @@
 {"message":"Unauthorized request to path: /","level":"error"}
+{"message":"Bookmark with id 9f4e4521-fb3c-4297-97c6-f618592cbc05 created","level":"info"}
+{"message":"Bookmark with id 9f4e4521-fb3c-4297-97c6-f618592cbc05 deleted.","level":"info"}
+{"message":"Bookmark with id 9f4e4521-fb3c-4297-97c6-f618592cbc05 not found.","level":"error"}
