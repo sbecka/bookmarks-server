@@ -26,6 +26,7 @@ describe.only('Bookmarks Endpoints', function() {
             it('responds with 200 and an empty list', () => {
                 return supertest(app)
                     .get('/bookmarks')
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(200, [])
             });
         });
@@ -42,6 +43,7 @@ describe.only('Bookmarks Endpoints', function() {
             it('Get /bookmarks responds with 200 and all of the articles', () => {
                 return supertest(app)
                     .get('/bookmarks')
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(200, testBookmarks)
             });
         });
@@ -54,6 +56,7 @@ describe.only('Bookmarks Endpoints', function() {
                 const bookmarkId = 823492;
                 return supertest(app)
                     .get(`/bookmarks/${bookmarkId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(404, { error: { message: `Bookmark not found` } })
             });
         });
@@ -72,6 +75,7 @@ describe.only('Bookmarks Endpoints', function() {
                 const expectedBookmark = testBookmarks[bookmarkId - 1];
                 return supertest(app)
                     .get(`/bookmarks/${bookmarkId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(200, expectedBookmark)
             });
         });
