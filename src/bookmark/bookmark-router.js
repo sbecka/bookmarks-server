@@ -1,21 +1,28 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = express.json();
 const logger = require('../logger');
 const uuid = require('uuid/v4');
 const bookmarkRouter = express.Router();
+const BookmarksService = require('../bookmarks-service');
 
-const bookmarks = [{
-    id: 1,
-    title: "Cheese",
-    url: "https://en.wikipedia.org/wiki/Cheese",
-    description: "History of cheese",
-    rating: 5
-}];
+// const bookmarks = [{
+//     id: 1,
+//     title: "Cheese",
+//     url: "https://en.wikipedia.org/wiki/Cheese",
+//     description: "History of cheese",
+//     rating: 5
+// }];
 
 bookmarkRouter
     .route('/bookmarks')
-    .get((req, res) => {
-        res.status(200).json(bookmarks);
+    .get((req, res, next) => {
+        const knexInstance = req.app.get('db');
+        BookmarksService.getAllBookmarks(knexInstance)
+            .then(bookmarks => {
+                res.json(bookmarks)
+            })
+            .catch(next)
     })
     .post(bodyParser, (req, res) => {
         const { title, url, description, rating } = req.body;
@@ -59,17 +66,21 @@ bookmarkRouter
     })
 
     bookmarkRouter
-        .route('/bookmarks/:id')
-        .get((req, res) => {
-            const { id } = req.params;
-            const bookmark = bookmarks.find(mark => mark.id == id);
+        .route('/bookmarks/:bookmark_id')
+        .get((req, res, next) => {
+            const knexInstance = req.app.get('db');
+            BookmarksService.getById(knexInstance, req.params.bookmark_id)
+                .then(bookmark => {
 
-            if (!bookmark) {
-                logger.error(`Bookmark with id ${id} not found.`)
-                return res.status(404).send('Bookmark Not Found');
-            }
-
-            res.json(bookmark);
+                    if (!bookmark) {
+                        //logger.error(`Bookmark with id ${id} not found.`)
+                        return res.status(404).json({ 
+                            error: { message: `Bookmark not found` } 
+                        });
+                    }
+                    res.json(bookmark);
+                })
+                .catch(next)
         })
         .delete((req, res) => {
             const { id } = req.params;
