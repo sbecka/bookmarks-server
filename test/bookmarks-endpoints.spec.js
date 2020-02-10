@@ -21,7 +21,7 @@ describe.only('Bookmarks Endpoints', function() {
     afterEach('cleanup', () => db('bookmarks').truncate());
 
     describe(`Unauthorized requests`, () => {
-        const testBookmarks = makeBookmarksArray()
+        const testBookmarks = makeBookmarksToTest()
     
         beforeEach('insert bookmarks', () => {
           return db
@@ -59,7 +59,7 @@ describe.only('Bookmarks Endpoints', function() {
 
     describe('GET /bookmarks', () => {
 
-        context('Given no articles', () => {
+        context('Given no bookmarks', () => {
             it('responds with 200 and an empty list', () => {
                 return supertest(app)
                     .get('/bookmarks')
@@ -85,8 +85,8 @@ describe.only('Bookmarks Endpoints', function() {
             });
         });
 
-        context.only(`Given an XSS attack bookmark`, () => {
-            const { maliciousBookmark, expectedBookmark } = makeMaliciousBookmark()
+        context(`Given an XSS attack bookmark`, () => {
+            const { maliciousBookmark, expectedBookmark } = makeMaliciousBookmark();
       
             beforeEach('insert malicious bookmark', () => {
               return db
@@ -109,7 +109,7 @@ describe.only('Bookmarks Endpoints', function() {
 
     describe('GET /bookmarks/:bookmark_id', () => {
 
-        context.only('Given no matching bookmarks in database', () => {
+        context('Given no matching bookmarks in database', () => {
             it('responds with 404', () => {
                 const bookmarkId = 823492;
                 return supertest(app)
@@ -140,7 +140,7 @@ describe.only('Bookmarks Endpoints', function() {
             });
         });
 
-        context.only(`Given an XSS attack bookmark`, () => {
+        context(`Given an XSS attack bookmark`, () => {
             const { maliciousBookmark, expectedBookmark } = makeMaliciousBookmark();
       
             beforeEach('insert malicious bookmark', () => {
@@ -248,7 +248,7 @@ describe.only('Bookmarks Endpoints', function() {
                 .expect(400, 'Rating should be a number between 1 and 5.')
         });
 
-        it.only('removes XSS attack content', () => {
+        it('removes XSS attack content', () => {
             const { maliciousBookmark, expectedBookmark } = makeMaliciousBookmark();
             return supertest(app)
                 .post(`/bookmarks`)
@@ -265,6 +265,17 @@ describe.only('Bookmarks Endpoints', function() {
 
 
     describe('DELETE /bookmarks/:bookmark_id', () => {
+        context(`Given no bookmarks`, () => {
+            it(`responds 404 when bookmark doesn't exist`, () => {
+              return supertest(app)
+                .delete(`/bookmarks/123`)
+                .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                .expect(404, {
+                  error: { message: `Bookmark Not Found` }
+                })
+            })
+        })
+
         context('Given there are bookmarks in the database', () => {
             const testBookmarks = makeBookmarksToTest();
 

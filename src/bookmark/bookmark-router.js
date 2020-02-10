@@ -74,17 +74,17 @@ bookmarkRouter
             BookmarksService.getById(knexInstance, req.params.bookmark_id)
                 .then(bookmark => {
                     if (!bookmark) {
-                        logger.error(`Bookmark with id ${id} not found.`)
+                        logger.error(`Bookmark with id ${bookmark_id} not found.`)
                         return res.status(404).json({ 
                             error: { message: `Bookmark not found` } 
                         });
                     }
                     res.bookmark = bookmark
-                    next();
+                    next()
                 })
                 .catch(next)
         })
-        .get((req, res) => {
+        .get((req, res, next) => {
             res.json(serializeBookmark(res.bookmark))      
         })
         .delete((req, res, next) => {
