@@ -1,0 +1,1 @@
+ALTER TABLE bookmarks ALTER COLUMN title TYPE text;
