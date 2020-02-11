@@ -328,7 +328,8 @@ describe.only('Bookmarks Endpoints', function() {
                 const idToUpdate = 3;
                 const updateBookmark = {
                     title: '3 Carrots!',
-                    description: '3 carrots restaurant is amazing!', 
+                    description: '3 carrots restaurant is amazing!',
+                    url: 'https://www.3estwebsite.com/',
                     rating: 5
                 };
 
@@ -387,6 +388,18 @@ describe.only('Bookmarks Endpoints', function() {
                             .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                             .expect(expectedBookmark)
                     })
+            });
+
+            it(`responds with 400 invalid 'rating' if not between 0 and 5`, () => {
+                const idToUpdate = 2
+                const updateInvalidRating = {
+                  rating: 'invalid',
+                }
+                return supertest(app)
+                  .patch(`/api/bookmarks/${idToUpdate}`)
+                  .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                  .send(updateInvalidRating)
+                  .expect(400, 'Rating should be a number between 1 and 5.')
             });
         });
     });

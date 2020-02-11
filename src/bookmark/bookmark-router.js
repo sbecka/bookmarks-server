@@ -99,6 +99,12 @@ bookmarkRouter
         })
         .patch(bodyParser, (req, res, next) => {
             const { title, url, description, rating } = req.body;
+            
+            if (rating && (!Number.isInteger(rating) || rating < 1 || rating > 5)) {
+                logger.error(`Rating needs to be between 1 and 5.`);
+                return res.status(400).send(`Rating should be a number between 1 and 5.`);
+            }
+            
             const updateBookmark = { title, url, description, rating }
             const numberOfValues = Object.values(updateBookmark).filter(Boolean).length;
             if (numberOfValues === 0) {
