@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const bodyParser = express.json();
 const logger = require('../logger');
@@ -16,7 +17,7 @@ const serializeBookmark = bookmark => ({
 });
 
 bookmarkRouter
-    .route('/bookmarks')
+    .route('/')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db');
         BookmarksService.getAllBookmarks(knexInstance)
@@ -60,14 +61,14 @@ bookmarkRouter
                logger.info(`Bookmark with id ${bookmark.id} created`);
                res
                  .status(201)
-                 .location(`/bookmarks/${bookmark.id}`)
+                 .location(path.posix.join(req.originalUrl, `${bookmark.id}`))
                  .json(serializeBookmark(bookmark)) 
             })
             .catch(next)
     })
 
     bookmarkRouter
-        .route('/bookmarks/:bookmark_id')
+        .route('/:bookmark_id')
         .all((req, res, next) => {
             const knexInstance = req.app.get('db');
             BookmarksService.getById(knexInstance, req.params.bookmark_id)

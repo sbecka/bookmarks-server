@@ -26,7 +26,7 @@ app.use(function validateBearerToken(req, res,next) {
     next();
 });
 
-app.use(bookmarkRouter);
+app.use('/api/bookmarks',bookmarkRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello, world!');
