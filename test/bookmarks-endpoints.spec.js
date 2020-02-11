@@ -107,16 +107,16 @@ describe.only('Bookmarks Endpoints', function() {
         });
     });
 
-    describe('GET /bookmarks/:bookmark_id', () => {
+    describe.only('GET /bookmarks/:bookmark_id', () => {
 
         context('Given no matching bookmarks in database', () => {
-            it('responds with 404', () => {
+            it.only('responds with 404', () => {
                 const bookmarkId = 823492;
                 return supertest(app)
                     .get(`/bookmarks/${bookmarkId}`)
                     .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(404, { 
-                        error: { message: `Bookmark not found` } 
+                        error: { message: `Bookmark Not Found` } 
                     })
             });
         });
@@ -264,15 +264,16 @@ describe.only('Bookmarks Endpoints', function() {
 
 
 
-    describe('DELETE /bookmarks/:bookmark_id', () => {
+    describe.only('DELETE /bookmarks/:bookmark_id', () => {
         context(`Given no bookmarks`, () => {
-            it(`responds 404 when bookmark doesn't exist`, () => {
-              return supertest(app)
-                .delete(`/bookmarks/123`)
-                .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-                .expect(404, {
-                  error: { message: `Bookmark Not Found` }
-                })
+            it.only(`responds 404 when bookmark doesn't exist`, () => {
+                const bookmarkId = 123;
+                return supertest(app)
+                    .delete(`/bookmarks/${bookmarkId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(404, {
+                        error: { message: `Bookmark Not Found` }
+                    })
             })
         })
 

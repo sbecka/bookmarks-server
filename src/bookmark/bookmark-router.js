@@ -26,7 +26,6 @@ bookmarkRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        
 
         for (const field of ['title', 'url', 'rating']) {
             if (!req.body[field]) {
@@ -74,9 +73,9 @@ bookmarkRouter
             BookmarksService.getById(knexInstance, req.params.bookmark_id)
                 .then(bookmark => {
                     if (!bookmark) {
-                        logger.error(`Bookmark with id ${bookmark_id} not found.`)
+                        logger.error(`Bookmark with id ${req.params.bookmark_id} not found.`)
                         return res.status(404).json({ 
-                            error: { message: `Bookmark not found` } 
+                            error: { message: `Bookmark Not Found` } 
                         });
                     }
                     res.bookmark = bookmark
@@ -84,7 +83,7 @@ bookmarkRouter
                 })
                 .catch(next)
         })
-        .get((req, res, next) => {
+        .get((req, res) => {
             res.json(serializeBookmark(res.bookmark))      
         })
         .delete((req, res, next) => {
